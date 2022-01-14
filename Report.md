@@ -45,4 +45,7 @@ in 1935 episodes, receiving average score equal to 0.516. Plot of the rewards ca
 
 
 ## Ideas for future work
-- using same actor network to select actions for each agent
+- Using same actor network to select actions for each agent
+- Performing deeper analysis of hyperparameters
+- Improving DDPG via Prioritized Experience Replay
+- Using Twin-Delayed DDPG (TD3), which introduces double learning technique to DDPG and avoids overestimation of Q-values
