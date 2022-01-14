@@ -59,6 +59,8 @@ if __name__ == '__main__':
     episode_scores = maddpg(env, brain_name, args.results_dir, DDPGAgents, memory, args.n_iterations, args.max_t)
 
     results_dir = Path(args.results_dir)
+    results_dir.mkdir(exist_ok=True, parents=True)
+    
     fig = plt.figure()
     ax = fig.add_subplot(111)
     plt.plot(np.arange(1, len(episode_scores) + 1), episode_scores)
