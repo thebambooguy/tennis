@@ -39,7 +39,7 @@ Following values of hyperparameters were chosen:
 
 In order to solve the environment, our agents must get an average score of +0.5 (over 100 consecutive episodes, after 
 taking the maximum over both agents). Two separate DDPG agents with shared replay buffer were able to solve the environment 
-in 1935 episodes, receiving average score equal to 0.516. Plot of the rewards can be found below.
+in 2012 episodes, receiving average score equal to 0.501. Plot of the rewards can be found below.
 
 ![Plot of rewards](results/agent_scores.png)
 
