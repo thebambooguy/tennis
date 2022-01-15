@@ -30,7 +30,7 @@ def create_and_parse_args(args=None):
     parser.add_argument("--batch_size", type=int, default=256, help='Batch Size')
     parser.add_argument("--gamma", type=float, default=0.99, help='Discount factor')
     parser.add_argument("--tau", type=float, default=1e-3, help='Soft Update interpolation parameter')
-    parser.add_argument("--results_dir", type=str, default='results', help='Results dir')
+    parser.add_argument("--results_dir", type=str, default='results_moving_average', help='Results dir')
     parser.add_argument("--seed", type=int, default=0)
     args = parser.parse_args(args)
     return args
@@ -56,19 +56,22 @@ if __name__ == '__main__':
     DDPGAgents = [Agent(*agents_params) for _ in range(num_agents)]
     memory = ReplayBuffer(action_size, args.buffer_size, args.batch_size, DEVICE, args.seed)
 
-    episode_scores = maddpg(env, brain_name, args.results_dir, DDPGAgents, memory, args.n_iterations, args.max_t)
-
     results_dir = Path(args.results_dir)
     results_dir.mkdir(exist_ok=True, parents=True)
-    
+
+    episode_scores, moving_average_episode_scores = maddpg(env, brain_name, args.results_dir, DDPGAgents, memory,
+                                                           args.n_iterations, args.max_t)
+
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    plt.plot(np.arange(1, len(episode_scores) + 1), episode_scores)
+    plt.plot(np.arange(1, len(episode_scores) + 1), episode_scores, 'b')
+    plt.plot(np.arange(1, len(moving_average_episode_scores) + 1), moving_average_episode_scores, 'r')
     plt.ylabel('Score')
     plt.xlabel('Episode #')
+    plt.legend(["Score of each episode", "Moving Average"])
     plt.savefig(results_dir / 'agent_scores.png')
 
-    with open(results_dir/ "args.yaml", 'w') as outfile:
+    with open(results_dir / "args.yaml", 'w') as outfile:
         yaml.dump(vars(args), outfile, default_flow_style=False)
 
     env.close()
