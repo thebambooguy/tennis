@@ -19,6 +19,7 @@ def maddpg(env, brain_name, result_dir, agents, memory, n_episodes=7000, max_t=1
     """
 
     episode_scores = []
+    moving_average_episode_scores = []
     scores_window = deque(maxlen=100)
     num_agents = len(agents)
 
@@ -42,6 +43,7 @@ def maddpg(env, brain_name, result_dir, agents, memory, n_episodes=7000, max_t=1
         episode_score = np.max(scores)
         episode_scores.append(episode_score)
         scores_window.append(episode_score)
+        moving_average_episode_scores.append(np.mean(scores_window))
 
         print(f'\rEpisode: {i}\tScore (max over agents): {episode_score}', end="")
         if i % 100 == 0:
@@ -53,4 +55,4 @@ def maddpg(env, brain_name, result_dir, agents, memory, n_episodes=7000, max_t=1
                 torch.save(agent.critic_local.state_dict(), Path(result_dir) / f'critic_model_player_{num_agent}_solution.pth')
             break
 
-    return episode_scores
+    return episode_scores, moving_average_episode_scores
